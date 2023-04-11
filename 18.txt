@@ -1,401 +1,400 @@
-Binomial Trees
+Binomial Trees 
 in Practice
-As we have seen in Chapters 13, 15, and 16, the Black–Scholes–Merton model and its
-extensions can be used to value European call and put options on stocks, stock indices,
-currencies, and futures contracts. For American options we rely on binomial trees. In
-this chapter we cover, more completely than in Chapter 12, how binomial trees are used
-in practice. In particular, we explain how the binomial tree methodology can be used to
-value American options on a range of different underlying assets including dividend
-paying stocks and how it can be used to calculate the Greek letters that were introduced
-in Chapter 17. The DerivaGem software that accompanies this book can be used to
-carry out the calculations described in the chapter and to display the binomial trees that
-are used.
+As we have seen in Chapters 13, 15, and 16, the Black−Scholes−Merton model and its 
+extensions can be used to value European call and put options on stocks, stock indices, 
+currencies, and futures contracts. For American options we rely on binomial trees. In 
+this chapter we cover, more completely than in Chapter 12, how binomial trees are 
+used in practice. In particular, we explain how the binomial tree methodology can be 
+used to value American options on a range of different underlying assets, including 
+dividend-paying stocks, and how it can be used to calculate the Greek letters that were 
+introduced in Chapter 17. The DerivaGem software that accompanies this book can be 
+used to carry out the calculations described in the chapter and to display the binomial 
+trees that are used.
 
-18.1 THE BINOMIAL MODEL FOR A
+18.1 THE BINOMIAL MODEL FOR A 
 NON-DIVIDEND-PAYING STOCK
-The binomial tree methodology for handling American-style options was first proposed
-by Cox, Ross, and Rubinstein.1 Consider the evaluation of an option on a non
-dividend-paying stock. We start by dividing the life of the option into a large number
-of small time intervals of length t. We assume that in each time interval the stock
-price moves from its initial value of S to one of two new values, Su and Sd. This model
-is illustrated in Figure 18.1. In general, u > 1 and d < 1. The movement from S to Su is,
-therefore, an ‘‘up’’ movement and the movement from S to Sd is a ‘‘down’’ movement.
-The probability of an up movement will be denoted by p. The probability of a down
-movement is 1  p.
+The binomial tree methodology for handling American-style options was proposed by 
+Cox, Ross, and Rubinstein in 1979.1 Consider the evaluation of an option on a non
+dividend-paying stock. We start by dividing the life of the option into a large number 
+of small time intervals of length Δt. We assume that in each time interval the stock 
+price moves from its initial value of S to one of two new values, Su and Sd. This model 
+is illustrated in Figure 18.1. In general, u > 1 and d < 1. The movement from S to Su is, 
+therefore, an “up” movement and the movement from S to Sd is a “down” movement. 
+The probability of an up movement will be denoted by p. The probability of a down 
+movement is 1 − p.
 
 Risk-Neutral Valuation
-The risk-neutral valuation principle, discussed in Chapters 12 and 13, states that any
-security dependent on a stock price can be valued on the assumption that the world is
-risk neutral. This means that, for the purposes of valuing an option (or any other
+The risk-neutral valuation principle, discussed in Chapters 12 and 13, states that any 
+security dependent on a stock price can be valued on the assumption that the world is 
+risk neutral. This means that, for the purposes of valuing an option (or any other 
 derivative), we can assume the following:
 1. The expected return from all traded securities is the risk-free interest rate.
-2. Future cash flows can be valued by discounting their expected values at the risk
-free interest rate.
+2. Future cash flows can be valued by discounting their expected values at the 
+risk-free interest rate.
 We will make use of this result when using a binomial tree.
 
 Determination of p, u, and d
-We design the tree to represent the behavior of a stock price in a risk-neutral world. The
-parameters p, u, and d must give correct values for the mean and variance of the stock
-price return during a time interval t in this world. The expected return from a stock is
-the risk-free interest rate, r. Hence, the expected value of the stock price at the end of a
-time interval t is Sert
-, where S is the stock price at the beginning of the time interval.
+We design the tree to represent the behavior of a stock price in a risk-neutral world. The 
+parameters p, u, and d must give correct values for the mean and variance of the stock 
+price return during a time interval Δt in this world. The expected return from a stock is 
+the risk-free interest rate, r. Hence, the expected value of the stock price at the end of a 
+time interval Δt is SerΔt
+, where S is the stock price at the beginning of the time interval. 
 To match the mean stock price return with the tree, we therefore need
 or
-The variance of a variable Q is defined as EðQ2Þ  EðQÞ2, where E denotes expected
-value. Defining R as the proportional change in the asset price in time t, there is a
-probability p that 1 þ R is u and a probability 1  p that 1 þ R is d. It follows that the
-variance of 1 þ R is pu2 þ ð1  pÞd 2  ½pu þ ð1  pÞd2. Because adding a constant to a
-variable makes no difference to its variance, the variance of 1 þ R is the same as the
-variance of R. As explained in Section 13.1, this is 2t. Hence,
-Equations (18.2) and (18.3) impose two conditions on p, u, and d. A third condition
-used by Cox, Ross, and Rubinstein is
-When t is small, equations (18.2), (18.3), and this equation are satisfied by
+The variance of a variable Q is defined as E(Q2
+) − E(Q)
+2
+, where E denotes expected 
+value. Defining R as the proportional change in the asset price in time Δt, there is a 
+probability p that 1 + R is u and a probability 1 − p that 1 + R is d. It follows that the 
+variance of 1 + R is pu2 + (1 − p)d2 − [pu + (1 − p)d]2. Because adding a constant to a 
+variable makes no difference to its variance, the variance of 1 + R is the same as the 
+variance of R. As explained in Section 13.1, this is s2Δt. Hence,
+Equations (18.2) and (18.3) impose two conditions on p, u, and d. A third condition used 
+by Cox, Ross, and Rubinstein is
+When Dt is small, equations (18.2), (18.3), and this equation are satisfied by
 where
-The variable a is sometimes referred to as the growth factor. Equations (18.4) to (18.7)
-are consistent with equations (12.11) to (12.14) in Chapter 12.
+The variable a is sometimes referred to as the growth factor. Equations (18.4) to (18.7) 
+are the same as equations (12.11) to (12.14) in Chapter 12.
 
 The Tree of Stock Prices
-Figure 18.2 shows the complete tree of stock prices that is considered when the binomial
-model is used and there are four time steps. At time zero, the stock price, S0, is known.
-At time t, there are two possible stock prices, S0u and S0d; at time 2t, there are three
-possible stock prices, S0u2, S0, and S0d 2; and so on. In general, at time i t, we consider
-i þ 1 stock prices. These are
-Note that the relationship u ¼ 1=d is used in computing the stock price at each node of
-the tree in Figure 18.2. For example, the asset price when j ¼ 2 and i ¼ 3 is
-S0u2d ¼ S0u. Note also that the tree recombines in the sense that an up movement
-followed by a down movement leads to the same stock price as a down movement
-followed by an up movement.
+Figure 18.2 shows the complete tree of stock prices that is considered when the binomial 
+model is used and there are four time steps. At time zero, the stock price, S0, is known. 
+At time Δt, there are two possible stock prices, S0u and S0d; at time 2Δt, there are three 
+possible stock prices, S0u2, S0, and S0d2; and so on. In general, at time i Δt, we consider 
+i + 1 stock prices. These are
+Note that the relationship u = 1/d is used in computing the stock price at each node of the 
+tree in Figure 18.2. For example, the asset price when j = 2 and i = 3 is S0u2d = S0u. Note 
+also that the tree recombines in the sense that an up movement followed by a down move
+ment leads to the same stock price as a down movement followed by an up movement.
 
 Working Backward through the Tree
-Options are evaluated by starting at the end of the tree (time T) and working backward,
-a procedure known as backwards induction. The value of the option is known at time T.
-For example, a put option is worth maxðK  ST ; 0Þ and a call option is worth
-maxðST  K; 0Þ, where ST is the stock price at time T and K is the strike price. Because
-a risk-neutral world is assumed, the value at each node at time T  t can be calculated
-as the expected value at time T discounted at rate r for a time period t. Similarly, the
-value at each node at time T  2t can be calculated as the expected value at time
-T  t discounted for a time period t at rate r, and so on. If the option is American, it
-is necessary to check at each node to see whether early exercise is preferable to holding
-the option for a further time period t. Eventually, by working back through all the
-nodes, we obtain the value of the option at time zero.
+Options are evaluated by starting at the end of the tree (time T) and working back
+ward, a procedure known as backward induction. The value of the option is known at 
+time T. For example, a put option is worth max(K − ST, 0) and a call option is worth 
+max(ST − K, 0), where ST is the stock price at time T and K is the strike price. Because 
+a risk-neutral world is assumed, the value at each node at time T − Δt can be calculated 
+as the expected value at time T discounted at rate r for a time period Δt. Similarly, 
+the value at each node at time T − 2Δt can be calculated as the expected value at time 
+T − Δt discounted for a time period Δt at rate r, and so on. If the option is American, 
+it is necessary to check at each node to see whether early exercise is preferable to 
+holding the option for a further time period Δt. Eventually, by working back through 
+all the nodes, we obtain the value of the option at time zero.
 
 Illustration
-We now illustrate the procedure with a five-step tree. Consider an American put option
-on a non-dividend-paying stock when the stock price is $50, the strike price is $50, the
-risk-free interest rate is 10% per annum, the life is five months, and the volatility is 40%
-per annum. With our usual notation, this means that S0 ¼ 50, K ¼ 50, r ¼ 0:10,
- ¼ 0:40, and T ¼ 0:4167. We divide the life of the option into five intervals of length
-one month for the purposes of constructing a binomial tree. Then t ¼ 1=12 and, using
-equations (18.4) to (18.7),
-Figure 18.3 shows the binomial tree (produced using DerivaGem). At each node there
-are two numbers. The top one shows the stock price at the node; the lower one shows
-the value of the option at the node. The probability of an up movement is always
+We now illustrate the procedure with a five-step tree. Consider an American put option 
+on a non-dividend-paying stock when the stock price is $50, the strike price is $50, the 
+risk-free interest rate is 10% per annum, the life is five months, and the volatility is 40% 
+per annum. With our usual notation, this means that S0 = 50, K = 50, r = 0.10, s = 0.40, 
+and T = 0.4167. We divide the life of the option into five intervals of length one month 
+for the purposes of constructing a binomial tree. Then Δt = 1/12 and, using equations 
+(18.4) to (18.7),
+Figure 18.3 shows the binomial tree (produced using DerivaGem). At each node there 
+are two numbers. The top one shows the stock price at the node; the lower one shows 
+the value of the option at the node. The probability of an up movement is always 
 0.5073; the probability of a down movement is always 0.4927.
-The stock price at the jth (j ¼ 0; 1; ... ; i) node at time i t (i ¼ 0; 1; ... ; 5) is
-calculated as S0uj
-d ij
-. For example, the stock price at node A ði ¼ 4; j ¼ 1Þ (i.e., the
-second node up at the end of the fourth time step) is 50  1:1224  0:89093 ¼ $39:69.
-The option prices at the final nodes are calculated as maxðK  ST ; 0Þ. For example,
-the option price at node G is 50:00  35:36 ¼ 14:64. The option prices at the pen
-ultimate nodes are calculated from the option prices at the final nodes. First, we assume
-no exercise of the option at a node. This means that the option price is calculated as the
-present value of the expected option price one time step later. For example, at node E,
+The stock price at the jth (j = 0, 1, . . ., i) node at time i Δt (i = 0, 1, . . ., 5) is calculated 
+as –0j ij Sud . For example, the stock price at node A (i = 4, j = 1) (i.e., the second node up 
+at the end of the fourth time step) is 50 × 1.1224 × 0.89093 = $39.69.
+The option prices at the final nodes are calculated as max(K − ST, 0). For example, 
+the option price at node G is 50.00 − 35.36 = 14.64. The option prices at the penultimate 
+nodes are calculated from the option prices at the final nodes. First, we assume no 
+exercise of the option at a node. This means that the option price is calculated as the 
+present value of the expected option price one time step later. For example, at node E, 
 the option price is calculated as
 whereas at node A it is calculated as
-We then check to see if early exercise is preferable to waiting. At node E, early exercise
-would give a value for the option of zero because both the stock price and strike price
-are $50. Clearly, it is best to wait. The correct value for the option at node E is,
-therefore, $2.66. At node A, it is a different story. If the option is exercised, it is worth
-$50:00  $39:69, or $10.31. This is more than $9.90. If node A is reached, the option
-should, therefore, be exercised and the correct value for the option at node A is
-$10.31.
-Option prices at earlier nodes are calculated in a similar way. Note that it is not always
-best to exercise an option early when it is in the money. Consider node B. If the option is
-exercised, it is worth $50:00  $39:69, or $10.31. However, if it is not exercised, it is
-worth
-The option should, therefore, not be exercised at this node, and the correct option value
+We then check to see if early exercise is preferable to waiting. At node E, early exercise 
+would give a value for the option of zero because both the stock price and strike 
+price are $50. Clearly, it is best to wait. The correct value for the option at node E 
+is, therefore, $2.66. At node A, it is a different story. If the option is exercised, it is 
+worth $50.00 − $39.69, or $10.31. This is more than $9.90. If node A is reached, the 
+option should, therefore, be exercised and the correct value for the option at node 
+A is $10.31.
+Option prices at earlier nodes are calculated in a similar way. Note that it is not 
+always best to exercise an option early when it is in the money. Consider node B. If the 
+option is exercised, it is worth $50.00 − $39.69, or $10.31. However, if it is not exercised, 
+it is worth
+The option should, therefore, not be exercised at this node, and the correct option value 
 at the node is $10.36.
-Working back through the tree, we find the value of the option at the initial node to
-be $4.49. This is our numerical estimate for the option’s current value. In practice, a
-smaller value of t, and many more nodes, would be used. DerivaGem shows that with
-30, 50, and 100 time steps we get values for the option of 4.263, 4.272, and 4.278,
+Working back through the tree, we find the value of the option at the initial node 
+to be $4.49. This is our numerical estimate for the option’s current value. In practice, 
+a smaller value of Δt, and many more nodes, would be used. DerivaGem shows that 
+with 30, 50, and 100 time steps we get values for the option of 4.263, 4.272, and 4.278, 
 respectively.
 
 Expressing the Approach Algebraically
-Suppose that the life of an American put option on a non-dividend-paying stock is
-divided into N subintervals of length t. We will refer to the jth node at time i t as the
-ði; jÞ node, where 0 6 i 6 N and 0 6 j 6 i. Define fi;j as the value of the option at the
-ði; jÞ node. The stock price at the ði; jÞ node is S0ujd ij. Because the value of an
-American put at its expiration date is maxðK  ST ; 0Þ, we know that
-There is a probability, p, of moving from the ði; jÞ node at time i t to the ði þ 1; j þ 1Þ
-node at time ði þ 1Þt, and a probability 1  p of moving from the ði; jÞ node at time
-i t to the ði þ 1; jÞ node at time ði þ 1Þt. Assuming no early exercise, risk-neutral
-valuation gives
-for 0 6 i 6 N  1 and 0 6 j 6 i. When early exercise is possible, this value for fi;j must
-be compared with the option’s intrinsic value, and we obtain
-Note that, because the calculations start at time T and work backward, the value at
-time i t captures not only the effect of early exercise possibilities at time i t, but also
-the effect of early exercise at subsequent times.
-In the limit as t tends to zero, an exact value for the American put is obtained. In
-practice, N ¼ 30 usually gives reasonable results. Figure 18.4 shows the convergence of
-the option price in the example we have been considering. (This figure was calculated
-using the Application Builder functions provided with the DerivaGem software. See
+Suppose that the life of an American put option on a non-dividend-paying stock is 
+divided into N subintervals of length Δt. We will refer to the jth node at time i Δt as 
+the (i, j) node, where 0 ≤ i ≤ N and 0 ≤ j ≤ i. This means that the lowest node at time 
+i Δt is (i, 0), the next lowest is (i, 1), and so on. Define fi,j as the value of the option 
+at the (i, j) node. The stock price at the (i, j) node is S0ujdi − j. Because the value of an 
+American put at its expiration date is max(K − ST, 0), We know that
+There is a probability, p, of moving from the (i, j) node at time i Δt to the (i + 1, j + 1) node 
+at time (i + 1)Δt, and a probability 1 − p of moving from the (i, j) node at time i Δt to the 
+(i + 1, j) node at time (i + 1) Δt. Assuming no early exercise, risk-neutral valuation gives
+for 0 ≤ i ≤ N − 1 and 0 ≤ j ≤ i. When early exercise is possible, this value for fi,j must be 
+compared with the option’s intrinsic value, and we obtain
+Note that, because the calculations start at time T and work backward, the value at time 
+i Δt captures not only the effect of early exercise possibilities at time i Δt, but also the 
+effect of early exercise at subsequent times.
+In the limit as Δt tends to zero, an exact value for the American put is obtained. In 
+practice, N = 30 usually gives reasonable results. Figure 18.4 shows the convergence of 
+the option price in the example we have been considering. (This figure was calculated 
+using the Application Builder functions provided with the DerivaGem software. See 
 Sample Application A.)
-If a call rather than a put is being valued, the value at the final node is
-maxðST  K; 0Þ, so that
-Also, when early exercise is possible, the expression for fi;j must reflect the payoff from
+If a call rather than a put is being valued, the value at the final node is max(ST − K, 0), 
+so that
+Also, when early exercise is possible, the expression for i j, f must reflect the payoff from 
 a call rather than a put, so that
 
 Estimating Delta and Other Greek Letters
-It will be recalled that the delta, , of an option is the rate of change of its price with
+It will be recalled that the delta, Δ, of an option is the rate of change of its price with 
 respect to the underlying stock price. It can be calculated as
-where S is a small change in the stock price and f is the corresponding small change
-in the option price. At time t, we have an estimate f1;1 for the option price when the
-stock price is S0u and an estimate f1;0 for the option price when the stock price is S0d.
-This means that, when S ¼ S0u  S0d, we have f ¼ f1;1  f1;0. An estimate of  at
-time t is therefore
-To determine gamma, , we note that there are two estimates of  at time 2t. When
-the stock price is ðS0u2 þ S0Þ=2 (halfway between the second and third node at
-time 2t), delta is ðf2;2  f2;1Þ=ðS0u2  S0Þ; when the stock price is ðS0 þ S0d 2
-Þ=2 (halfway between the first and second node at time 2t), delta is ðf2;1  f2;0Þ=ðS0  S0d 2Þ.
-The difference between the two stock prices is h, where
+where ΔS is a small change in the stock price and Δ f is the corresponding small change 
+in the option price. At time Δt, we have an estimate f1,1 for the option price when the 
+stock price is S0u and an estimate f1,0 for the option price when the stock price is S0d. 
+This means that, when ΔS = S0u − S0d, we have Δ f = f1,1 − f1,0. An estimate of Δ at time 
+Δt is therefore
+To determine gamma, Γ, we note that there are two estimates of Δ at time 2Δt. When 
+the stock price is (S0u2 + S0)/2 (halfway between the second and third node at time 2Δt), 
+delta is (f2,2 − f2,1)/(S0u2 − S0); when the stock price is (S0 + S0d2)/2 (halfway between the 
+first and second node at time 2Δt), delta is (f2,1 − f2,0)/(S0 − S0d2). The difference between 
+the two stock prices is h, where
 Gamma is the change in delta divided by h, or
-These procedures provide estimates of delta at time t and of gamma at time 2t. In
+These procedures provide estimates of delta at time Δt and of gamma at time 2Δt. In 
 practice, they are usually used as estimates of delta and gamma at time zero as well.2
-A further hedge parameter that can be obtained directly from the tree is theta, . This
-is the rate of change of the option price with time when all else is kept constant. The value
-of the option at time zero, when the stock price is S0, is f0;0. The value of the option at
-time 2t, when the stock price is S0, is f2;1. An estimate of theta is therefore
-Vega can be calculated by making a small change, , in the volatility and constructing
-a new tree to obtain a new value of the option (the number of time steps should be kept
+A further hedge parameter that can be obtained directly from the tree is theta, Θ. 
+This is the rate of change of the option price with time when all else is kept constant. 
+The value of the option at time zero, when the stock price is S0, is f0,0 . The value of the 
+option at time 2Δt, when the stock price is S0, is f2,1. An estimate of theta is therefore
+Vega can be calculated by making a small change, Δs, in the volatility and constructing 
+a new tree to obtain a new value of the option (the number of time steps should be kept 
 the same). The estimate of vega is
-where f and f  are the estimates of the option price from the original and the new tree,
+where f and f *
+ are the estimates of the option price from the original and the new tree, 
 respectively. Rho can be calculated similarly.
-As an illustration, consider the tree in Figure 18.3. In this case, f1;0 ¼ 6:96 and
-f1;1 ¼ 2:16. Equation (18.8) gives an estimate of delta of
-From equation (18.9), an estimate of the gamma of the option can be obtained from the
+As an illustration, consider the tree in Figure 18.3. In this case, f1,0 = 6.96 and 
+f1,1 = 2.16. Equation (18.8) gives an estimate of delta of
+From equation (18.9), an estimate of the gamma of the option can be obtained from the 
 values at nodes B, C, and F as
-From equation (18.10), an estimate of the theta of the option can be obtained from
-the values at nodes D and C as
-or 0.012 per calendar day. These are, of course, only rough estimates. They become
-progressively better as the number of time steps on the tree is increased. Using 50 time
-steps, DerivaGem provides estimates of 0:414, 0:033, and 0:0117 for delta, gamma,
+From equation (18.10), an estimate of the theta of the option can be obtained from the 
+values at nodes D and C as
+or −0.012 per calendar day. These are, of course, only rough estimates. They become 
+progressively better as the number of time steps on the tree is increased. Using 50 time 
+steps, DerivaGem provides estimates of −0.414, 0.033, and −0.0117 for delta, gamma, 
 and theta, respectively.
 
-18.2 USING THE BINOMIAL TREE FOR OPTIONS ON
+18.2 USING THE BINOMIAL TREE FOR OPTIONS ON 
 INDICES, CURRENCIES, AND FUTURES CONTRACTS
 As shown in Section 12.10, the binomial tree approach to valuing options on non
-dividend-paying stocks can easily be adapted to valuing American calls and puts on a
+dividend-paying stocks can easily be adapted to valuing American calls and puts on a 
 stock paying a continuous dividend yield at rate q.
-Because the dividends provide a return of q, the stock price itself must, on average, in
-a risk-neutral world provide a return of r  q. Hence, equation (18.1) becomes
+Because the dividends provide a return of q, the stock price itself must, on average, 
+in a risk-neutral world provide a return of r − q. Hence, equation (18.1) becomes
 so that
-The parameters p, u, and d must satisfy this equation and equation (18.3). Equa
-tions (18.4), (18.5), and (18.6) are still correct but with
-The binomial tree numerical procedure can therefore be used exactly as before with this
-new value of a.
-We showed in Chapters 15 and 16 that stock indices, currencies, and futures contracts
-can for the purposes of option evaluation be considered as stocks paying continuous
-dividend yields. In the case of a stock index, the relevant dividend yield is the dividend
-yield on the stock portfolio underlying the index; in the case of a currency, it is the
-foreign risk-free interest rate; in the case of a futures contract, it is the domestic risk-free
+The parameters p, u, and d must satisfy this equation and equation (18.3). Equations 
+(18.4), (18.5), and (18.6) are still correct but with
+The binomial tree numerical procedure can therefore be used exactly as before with 
+this new value of a.
+We showed in Chapters 15 and 16 that stock indices, currencies, and futures contracts 
+can for the purposes of option evaluation be considered as stocks paying continuous 
+dividend yields. In the case of a stock index, the relevant dividend yield is the dividend 
+yield on the stock portfolio underlying the index; in the case of a currency, it is the 
+foreign risk-free interest rate; in the case of a futures contract, it is the domestic risk-free 
 interest rate. Examples 18.1 and 18.2 illustrate this.
 
-18.3 THE BINOMIAL MODEL FOR A
+18.3 THE BINOMIAL MODEL FOR A 
 DIVIDEND-PAYING STOCK
-We now move on to the more tricky issue of how the binomial model can be used for a
-stock paying discrete dividends. As in Chapter 13, the word ‘‘dividend’’ will for the
-purposes of our discussion be used to refer to the reduction in the stock price on the ex
-dividend date as a result of the dividend.
+We now move on to the more tricky issue of how the binomial model can be used for 
+a stock paying discrete dividends. As in Chapter 13, the word “dividend” will for the 
+purposes of our discussion be used to refer to the reduction in the stock price on the 
+ex-dividend date as a result of the dividend.
 
 Known Dividend Yield
-For long-life stock options, it is sometimes assumed for convenience that there is a known
-continuous dividend yield of q on the stock. The options can then be valued in the same
-way as options on a stock index. For more accuracy, known dividend yields can be
-assumed to be paid discretely. Suppose first that a single dividend will be paid at a certain
-time and that it will be a proportion  of the stock price at that time. The parameters u, d,
-and p can be calculated as though no dividends are expected. The tree takes the form
-shown in Figure 18.5 and can be analyzed in a way that is analogous to that just
-described. If the time i t is prior to the stock going ex-dividend, the nodes on the tree
-correspond to stock prices
-If the time i t is after the stock goes ex-dividend, the nodes correspond to stock prices
-Several known dividends during the life of an option can be dealt with similarly. If i is
-the total dividend yield associated with all ex-dividend dates between time zero and
-time i t, the nodes at time i t correspond to stock prices
+For long-life stock options, it is sometimes assumed for convenience that there is a 
+known continuous dividend yield of q on the stock. The options can then be valued in 
+the same way as options on a stock index. For more accuracy, known dividend yields 
+can be assumed to be paid discretely. Suppose first that a single dividend will be paid 
+at a certain time and that it will be a proportion d of the stock price at that time. The 
+parameters u, d, and p can be calculated as though no dividends are expected. The tree 
+takes the form shown in Figure 18.5 and can be analyzed in a way that is analogous to 
+that just described. If the time i Δt is prior to the stock going ex-dividend, the nodes on 
+the tree correspond to stock prices
+If the time i Δt is after the stock goes ex-dividend, the nodes correspond to stock prices
+Several known dividends during the life of an option can be dealt with similarly. If di
+is the total dividend yield associated with all ex-dividend dates between time zero and 
+time i Δt, the nodes at time i Δt correspond to stock prices
 
 Known Dollar Dividend
-In some situations, particularly when the life of the option is short, it is more realistic to
-assume that the dollar amount of the dividend rather than the dividend yield is known
-in advance. If the volatility of the stock, , is assumed constant, the tree takes the form
-shown in Figure 18.6. It does not recombine, which means that the number of nodes
-that have to be evaluated is liable to become very large. Suppose that there is only one
-dividend, that the ex-dividend date, , is between kt and ðk þ 1Þt, and that the dollar
-amount of the dividend is D. When i 6 k, the nodes on the tree at time i t correspond
+In some situations, particularly when the life of the option is short, it is more realistic to 
+assume that the dollar amount of the dividend rather than the dividend yield is known 
+in advance. If the volatility of the stock, s, is assumed constant, the tree takes the form 
+shown in Figure 18.6. It does not recombine, which means that the number of nodes 
+that have to be evaluated is liable to become very large. Suppose that there is only one 
+dividend, that the ex-dividend date, t, is between kΔt and (k + 1)Δt, and that the dollar 
+amount of the dividend is D. When i ≤ k, the nodes on the tree at time i Δt correspond 
 to stock prices
-as before. When i ¼ k þ 1, the nodes on the tree correspond to stock prices
-When i ¼ k þ 2, the nodes on the tree correspond to stock prices
-for j ¼ 0; 1; 2; ... ; i  1, so that there are 2i rather than i þ 1 nodes. At time ðk þ mÞt,
-there are mðk þ 2Þ rather than k þ m þ 1 nodes. The number of nodes expands even
-faster when there are several ex-dividend dates during the option’s life.
-The node-proliferation problem can be solved by assuming, as in the analysis of
-European options in Chapter 13, that the stock price has two components: a part that
-is uncertain and a part that is the present value of all future dividends during the life
-of the option. Suppose that there is only one ex-dividend date, , during the life of the
-option and that kt 6  6 ðk þ 1Þt. The value of the uncertain component, S, at
-time i t is given by
+as before. When i = k + 1, the nodes on the tree correspond to stock prices
+When i = k + 2, the nodes on the tree correspond to stock prices
+for j = 0, 1, 2, . . ., i − 1, so that there are 2i rather than i + 1 nodes. At time (k + m)Δt, there 
+are m(k + 2) rather than k + m + 1 nodes. The number of nodes expands even faster 
+when there are several ex-dividend dates during the option’s life.
+The node-proliferation problem can be solved by assuming, as in the analysis of 
+European options in Chapter 13, that the stock price has two components: a part that 
+is uncertain and a part that is the present value of all future dividends during the life 
+of the option. Suppose that there is only one ex-dividend date, t, during the life of the 
+option and that kΔt ≤ t ≤ (k + 1)Δt. The value S* of the uncertain component (i.e., the 
+component not used to pay dividends) at time i Δt is given by
 and
-where D is the dividend. Define  as the volatility of S and assume that  is
-constant.3 The parameters p, u, and d can be calculated from equations (18.4),
-(18.5), (18.6), and (18.7) with  replaced by , and a tree can be constructed in the
-usual way to model S. By adding to the stock price at each node the present value of
-future dividends (if any), the tree can be converted into another tree that models S.
-Suppose that S0 is the value of S at time zero. At time i t, the nodes on this tree
-correspond to the stock prices
-when i t <  and
-when i t > . This approach, which has the advantage of being consistent with the
-approach for European options in Section 13.10, succeeds in achieving a situation where
-the tree recombines so that there are i þ 1 nodes at time i t. It can be generalized in a
-straightforward way to deal with the situation where there are several dividends. The
-approach is illustrated in Example 18.3. As indicated earlier, for long-life options a
+where D is the dividend. Define s* as the volatility of S* and assume that s* is constant.3
+The parameters p, u, and d can be calculated from equations (18.4), (18.5), (18.6), and 
+(18.7) with s replaced by s*, and a tree can be constructed in the usual way to model 
+S*. By adding to the stock price at each node, the present value of future dividends 
+(if any), the tree can be converted into another tree that models S. Suppose that * S0 is the 
+value of S* at time zero. At time i Δt, the nodes on this tree correspond to the stock prices
+when i Δt < t and
+when i Δt > t. This approach, which has the advantage of being consistent with the 
+approach for European options in Section 13.10, succeeds in achieving a situation where 
+the tree recombines so that there are i + 1 nodes at time i Δt. It can be generalized in a 
+straightforward way to deal with the situation where there are several dividends. The 
+approach is illustrated in Example 18.3. As indicated earlier, for long-life options a 
 known dividend yield rather than a known dollar dividend is often assumed.
 
 18.4 EXTENSIONS OF THE BASIC TREE APPROACH
 We now explain two ways in which the binomial tree approach can be extended.
 
 Time-Dependent Interest Rates and Volatilities
-Up to now we have been assuming that interest rates are constant. When the term
-structure is steeply upward or downward sloping and American options are being
-valued, this may not be a satisfactory assumption. It is more appropriate to assume
-that the interest rate for a period of length t in the future equals the current forward
-interest rate for that period. We can accommodate this assumption by setting
-for nodes at time t where fðtÞ is the forward rate between times t and t þ t. This does
-not change the geometry of the tree because u and d do not depend on a. The
-probabilities on the branches emanating from nodes at time t are as before:4
-The rest of the way in which we use the tree is the same as before, except that when
-discounting from time t þ t to time t we use fðtÞ. A similar modification of the basic
-tree can be used to value index options, foreign exchange options, and futures options.
-In these applications the dividend yield on an index or a foreign risk-free rate can be
+Up to now we have been assuming that interest rates are constant. When the term struc
+ture is steeply upward or downward sloping and American options are being valued, 
+this may not be a satisfactory assumption. It is more appropriate to assume that the 
+interest rate for a period of length Δt in the future equals the current forward interest 
+rate for that period. We can accommodate this assumption by setting
+for nodes at time t where f(t) is the forward rate between times t and t + Δt. This does not 
+change the geometry of the tree because u and d do not depend on a. The probabilities 
+on the branches emanating from nodes at time t are as before:4
+The rest of the way in which we use the tree is the same as before, except that when 
+discounting from time t + Δt to time t we use f(t). A similar modification of the basic 
+tree can be used to value index options, foreign exchange options, and futures options. 
+In these applications the dividend yield on an index or a foreign risk-free rate can be 
 made a function of time by following a similar approach to that just described.
-Making the volatility  a function of time in a binomial tree is more difficult. Suppose
-ðtÞ is the volatility used to price an option with a life of t. One approach is to make the
-length of each time step inversely proportional to the average variance rate during the
-time step. The values of u and d are then the same everywhere and the tree recombines.
-Define the V ¼ ðTÞ2T, where T is the life of the tree and define ti as the end of the ith
-time step. For N time steps, we choose ti to satisfy ðtiÞ2ti ¼ iV=N and set u ¼ e ffiffiffiffiffiffiffiV=N p
-with d ¼ 1=u. The parameter p is defined as for a constant volatility. This procedure can
-be combined with the procedure just mentioned for dealing with non-constant interest
+Making the volatility s a function of time in a binomial tree is more difficult. Suppose 
+s (t) is the volatility used to price an option with a life of t. One approach is to make the 
+length of each time step inversely proportional to the average variance rate during the 
+time step. The values of u and d are then the same everywhere and the tree recombines. 
+Define the V = s (T)2T, where T is the life of the tree and define ti as the end of the 
+ith time step. For N time steps, we choose ti to satisfy s (ti)2ti = iV/N and set V N/ u e =
+with d = 1/u. The parameter p is defined as for a constant volatility. This procedure can 
+be combined with the procedure just mentioned for dealing with non-constant interest 
 rates, so that both interest rates and volatilities are time-dependent.
 
 The Control Variate Technique
-A technique known as the control variate technique can be used for the evaluation of an
-American option.5 This involves using the same tree to calculate both the value of the
-American option, fA, and the value of the corresponding European option, fE. The
-Black–Scholes–Merton price of the European option, fBSM, is also calculated. The
-error given by the tree in the pricing of the European option, fBSM  fE, is assumed
-equal to that given by the tree in the pricing of the American option. This gives the
+A technique known as the control variate technique can be used for the evaluation 
+of an American option.5
+ This involves using the same tree to calculate both the value 
+of the American option, fA, and the value of the corresponding European option, fE. 
+The Black−Scholes−Merton price of the European option, fBSM, is also calculated. The 
+error given by the tree in the pricing of the European option, fBSM − fE, is assumed 
+equal to that given by the tree in the pricing of the American option. This gives the 
 estimate of the price of the American option to be
-To illustrate this approach, Figure 18.7 values the option in Figure 18.3 on the
-assumption that it is European. The price obtained, fE, is $4.32. From the Black–
-Scholes–Merton formula, the true European price of the option, fBSM, is $4.08. The
-estimate of the American price, fA, in Figure 18.3 is $4.49. The control variate estimate
-of the American price is therefore
-A good estimate of the American price, calculated using 100 steps, is 4.278. The
-control variate approach does, therefore, produce a considerable improvement over the
-basic tree estimate of 4.49 in this case. In effect, it uses the tree to calculate the
-difference between the European and the American price rather than the American
-price itself.
+To illustrate this approach, Figure 18.7 values the option in Figure 18.3 on the assump
+tion that it is European. The price obtained, fE, is $4.32. From the Black−Scholes−
+Merton formula, the true European price of the option, fBSM, is $4.08. The estimate 
+of the American price, fA, in Figure 18.3 is $4.49. The control variate estimate of the 
+American price is therefore
+A good estimate of the American price, calculated using 100 steps, is 4.278. The 
+control variate approach does, therefore, produce a considerable improvement over the 
+basic tree estimate of 4.49 in this case. In effect, it uses the tree to calculate the difference 
+between the European and the American price rather than the American price itself.
 
-18.5 ALTERNATIVE PROCEDURE FOR
+18.5 ALTERNATIVE PROCEDURE FOR 
 CONSTRUCTING TREES
-The Cox, Ross, and Rubinstein approach is not the only way of building a binomial
-tree. Instead of imposing the assumption u ¼ 1=d on equations (18.2) and (18.3), we
-can set p ¼ 0:5. A solution to the equations for small t is then
-When the stock provides a continuous dividend yield at rate q, the variable r becomes
-r  q in these formulas. This allows trees with p ¼ 0:5 to be built for options on indices,
+The Cox, Ross, and Rubinstein approach is not the only way of building a binomial tree. 
+Instead of imposing the assumption u = 1/d on equations (18.2) and (18.3), we can set 
+p = 0.5. A solution to the equations for small Δt is then
+When the stock provides a continuous dividend yield at rate q, the variable r becomes 
+r − q in these formulas. This allows trees with p = 0.5 to be built for options on indices, 
 foreign exchange, and futures. The procedure is illustrated in Example 18.4.
-This alternative tree-building procedure has the advantage over the Cox, Ross, and
-Rubinstein approach that the probabilities are always 0.5 regardless of the value of  or
-the number of time steps.6 A small disadvantage is that the calculation of delta, gamma,
-and theta from the tree is not quite as accurate because the values of the underlying
-asset at times t and 2t are no longer centered at S0.
+This alternative tree-building procedure has the advantage over the Cox, Ross, and 
+Rubinstein approach that the probabilities are always 0.5 regardless of the value of s or 
+the number of time steps.6
+ A small disadvantage is that the calculation of delta, gamma, 
+and theta from the tree is not quite as accurate because the values of the underlying 
+asset at times Δt and 2Δt are no longer centered at S0.
 
 18.6 MONTE CARLO SIMULATION
-Binomial trees can be used in conjunction with a procedure known as Monte Carlo
-simulation for valuing derivatives. Once the tree has been constructed, we randomly
-sample paths through it. Instead of working backward from the end of the tree to the
-beginning, we work forward through the tree. The basic procedure is as follows. At the
-first node we sample a random number between 0 and 1. If the number lies between 0
-and p, we take the upper branch; if it lies between p and 1, we take the lower branch.
-We repeat this procedure at the node that is then reached and at all subsequent nodes
-that are reached until we get to the end of the tree. We then calculate the payoff on the
-option for the particular path sampled. This completes the first trial. We carry out
-many more trials by repeating the whole procedure. Our estimate of the value of the
-option is the arithmetic average of the payoffs from all the trials discounted at the risk
-free interest rate. Example 18.5 provides an illustration.
-Monte Carlo simulation, as just described, cannot easily be used for American
-options, because we have no way of knowing whether early exercise is optimal when
-a certain node is reached. It can be used to value European options so that a check is
-provided on the pricing formulas for these options. It can also be used to price some of
-the exotic options we will discuss in Chapter 22 (e.g. Asian options and lookback
-options).
+Binomial trees can be used in conjunction with a procedure known as Monte Carlo 
+simulation for valuing derivatives. Once the tree has been constructed, we randomly 
+sample paths through it. Instead of working backward from the end of the tree to the 
+beginning, we work forward through the tree. The basic procedure is as follows. At the 
+first node we sample a random number between 0 and 1. If the number lies between 0 
+and p, we take the upper branch; if it lies between p and 1, we take the lower branch. 
+We repeat this procedure at the node that is then reached and at all subsequent nodes 
+that are reached until we get to the end of the tree. We then calculate the payoff on the 
+option for the particular path sampled. This completes the first trial. We carry out many 
+more trials by repeating the whole procedure. Our estimate of the value of the option 
+is the arithmetic average of the payoffs from all the trials discounted at the risk-free 
+interest rate. Example 18.5 provides an illustration.
+Monte Carlo simulation, as just described, cannot easily be used for American 
+options, because we have no way of knowing whether early exercise is optimal when a 
+certain node is reached. It can be used to value European options so that a check is pro
+vided on the pricing formulas for these options. It can also be used to price some of the 
+exotic options we will discuss in Chapter 22 (e.g. Asian options and lookback options).
 
 SUMMARY
-This chapter has described how options can be valued using the binomial tree
-approach. This approach involves dividing the life of the option into a number of
-small intervals of length t and assuming that an asset price at the beginning of an
-interval can lead to only one of two alternative asset prices at the end of the interval.
-One of these alternative asset prices involves an up movement; the other involves a
-down movement.
-The sizes of the up movements and down movements, and their associated probabilities, are chosen so that the change in the asset price has the correct mean and
-standard deviation for a risk-neutral world. Option prices are calculated by starting at
-the end of the tree and working backward. At the end of the tree, the price of an option
-is its intrinsic value. At earlier nodes on the tree, the value of an option, if it is
-American, must be calculated as the greater of
+This chapter has described how options can be valued using the binomial tree approach. 
+This approach involves dividing the life of the option into a number of small intervals 
+of length Δt and assuming that an asset price at the beginning of an interval can lead to 
+only one of two alternative asset prices at the end of the interval. One of these alterna
+tive asset prices involves an up movement; the other involves a down movement.
+The sizes of the up movements and down movements, and their associated probabil
+ities, are chosen so that the change in the asset price has the correct mean and standard 
+deviation for a risk-neutral world. Option prices are calculated by starting at the end 
+of the tree and working backward. At the end of the tree, the price of an option is its 
+intrinsic value. At earlier nodes on the tree, the value of an option, if it is American, must 
+be calculated as the greater of
 1. The value it has if exercised immediately
-2. The value it has if held for a further period of time of length t.
-If it is exercised at a node, the value of the option is its intrinsic value. If it is held for a
-further period of length t, the value of the option is its expected value at the end of
-the time period t discounted at the risk-free rate.
-Delta, gamma, and theta can be estimated directly from the values of the option at the
-various nodes of the tree. Vega can be estimated by making a small change to the
-volatility and recomputing the value of the option using a similar tree. Rho can similarly
+2. The value it has if held for a further period of time of length Δt.
+If it is exercised at a node, the value of the option is its intrinsic value. If it is held for 
+a further period of length Δt, the value of the option is its expected value at the end of 
+the time period Δt discounted at the risk-free rate.
+Delta, gamma, and theta can be estimated directly from the values of the option at 
+the various nodes of the tree. Vega can be estimated by making a small change to the 
+volatility and recomputing the value of the option using a similar tree. Rho can similarly 
 be estimated by making a small change to the interest rate and recomputing the tree.
-The binomial tree approach can handle options on stocks paying continuous
-dividend yields. Because stock indices, currencies, and most futures contracts can be
-regarded as analogous to stocks paying continuous yields, binomial trees can handle
-options on these assets as well.
-When the binomial tree approach is used to value options on a stock paying known
-dollar dividends, it is convenient to use the tree to model the stock price less the present
-value of all future dividends during the life of the option. This keeps the number of
-nodes on the tree from becoming unmanageable and is consistent with the way
+The binomial tree approach can handle options on stocks paying continuous dividend 
+yields. Because stock indices, currencies, and most futures contracts can be regarded as 
+analogous to stocks paying continuous yields, binomial trees can handle options on 
+these assets as well.
+When the binomial tree approach is used to value options on a stock paying known 
+dollar dividends, it is convenient to use the tree to model the stock price less the pres
+ent value of all future dividends during the life of the option. This keeps the number 
+of nodes on the tree from becoming unmanageable and is consistent with the way 
 European options on dividend-paying stocks are valued.
-The computational efficiency of the binomial model can be improved by using the
-control variate technique. This involves valuing both the American option that is of
-interest and the corresponding European option using the same tree. The error in the
-price of the European option is used as an estimate of the error in the price of the
+The computational efficiency of the binomial model can be improved by using the 
+control variate technique. This involves valuing both the American option that is of 
+interest and the corresponding European option using the same tree. The error in the 
+price of the European option is used as an estimate of the error in the price of the 
 American option.
 
 FURTHER READING
-Boyle, P. P. ‘‘Options: A Monte Carlo Approach,’’ Journal of Financial Economics, 4 (1977):
-323–28.
-Boyle, P. P., M. Broadie, and P. Glasserman. ‘‘Monte Carlo Methods for Security Pricing,’’
-Journal of Economic Dynamics and Control, 21 (1997): 1267–1322.
-Cox, J. C., S. A. Ross, and M. Rubinstein. ‘‘Option Pricing: A Simplified Approach,’’ Journal of
-Financial Economics, 7 (October 1979): 229–64.
-Figlewski, S., and B. Gao. ‘‘The Adaptive Mesh Model: A New Approach to Efficient Option
-Pricing,’’ Journal of Financial Economics, 53 (1999), 313–51.
-Hull, J. C., and A. White. ‘‘The Use of the Control Variate Technique in Option Pricing,’’
-Journal of Financial and Quantitative Analysis, 23 (September 1988): 237–51.
-Longstaff, F. A. and E. S. Schwartz. ‘‘Valuing American Options by Simulation: A Least Squares
-Approach,’’ Review of Financial Studies, 14, 1 (2001): 113–47.
-Rendleman, R., and B. Bartter. ‘‘Two State Option Pricing,’’ Journal of Finance, 34 (1979):
-1092–1110.
+Boyle, P. P. “Options: A Monte Carlo Approach,” Journal of Financial Economics, 4 (1977): 323−28.
+Boyle, P. P., M. Broadie, and P. Glasserman. “Monte Carlo Methods for Security Pricing,” Journal 
+of Economic Dynamics and Control, 21 (1997): 1267−1322.
+Cox, J. C., S. A. Ross, and M. Rubinstein. “Option Pricing: A Simplified Approach,” Journal of 
+Financial Economics, 7 (October 1979): 229−64.
+Figlewski, S., and B. Gao. “The Adaptive Mesh Model: A New Approach to Efficient Option 
+Pricing,” Journal of Financial Economics, 53 (1999), 313−51.
+Hull, J. C., and A. White. “The Use of the Control Variate Technique in Option Pricing,” Journal 
+of Financial and Quantitative Analysis, 23 (September 1988): 237−51.
+Longstaff, F. A. and E. S. Schwartz. “Valuing American Options by Simulation: A Least Squares 
+Approach,” Review of Financial Studies, 14, 1 (2001): 113−47.
+Rendleman, R., and B. Bartter. “Two State Option Pricing,” Journal of Finance, 34 (1979): 
+1092−1110.
 
 Quiz (Answers at End of Book)
-18.1. Which of the following can be estimated for an American option by constructing a single
+18.1. Which of the following can be estimated for an American option by constructing a single 
 binomial tree: delta, gamma, vega, theta, rho?
-18.2. The probability for an up-movement on a binomial tree is ða  dÞ=ðu  dÞ. Explain how
-the growth factor a is calculated for (a) a non-dividend-paying stock, (b) a stock index,
+18.2. The probability for an up-movement on a binomial tree is (a − d)/(u − d). Explain how 
+the growth factor a is calculated for (a) a non-dividend-paying stock, (b) a stock index, 
 (c) a foreign currency, and (d) a futures contract.
